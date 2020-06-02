@@ -2,6 +2,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var db = require('./models');
 
 var indexRouter = require('./routes/index');
 // var usersRouter = require('./routes/users');
@@ -17,21 +18,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/hello', indexRouter);
 // app.use('/users', usersRouter);
 
-// Setup Database
-// const Sequelize = require('sequelize');
-// const sequelize = new Sequelize('postgres://glkzskfvfckaux:664475a22db2fc50717b1bfc4ca116ebe65f683f4fcdf9e4ed565da0ea50b48f@ec2-35-169-254-43.compute-1.amazonaws.com:5432/d7ppsjuvp4hof1');
 
-// sequelize
-//   .authenticate()
-//   .then(() => {
-//     console.log('Database connection has been established successfully.');
-//   })
-//   .catch(err => {
-//     console.error('Unable to connect to the database:', err);
-//   });
+// Database setup Heroku
+db.sequelize.sync().then(function() {
+    http.createServer(app).listen(app.get('port'), function(){
+      console.log('Express server listening on port ' + app.get('port'));
+    });
+});
 
-
-
+// Heroku Express/React deployment
 if (process.env.NODE_ENV === 'production') {
     // Serve any static files
     app.use(express.static(path.join(__dirname, 'client/build')));
