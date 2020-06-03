@@ -9,7 +9,8 @@ const { pool } = require('../config');
 router.get('/cat', function(req, res) {
     pool.query('SELECT * FROM cats', (error, results) => {
         if (error) {
-            res.status(404).json({'nope':'nothing'});
+            res.send(process.env.TEST_ENV);
+            // res.status(404).json({'nope':'nothing'});
         } else {
             res.status(200).json(results.rows);
         } 
