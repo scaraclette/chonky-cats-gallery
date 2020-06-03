@@ -20,7 +20,7 @@ router.get('/cat', function(req, res) {
         //     res.status(200).json(results.rows);
         // } 
         res.status(200).json(results.rows);
-        pool.end();
+        // pool.end();
     });
 });
 
