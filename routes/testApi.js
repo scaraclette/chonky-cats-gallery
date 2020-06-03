@@ -9,9 +9,10 @@ const { pool } = require('../config');
 router.get('/cat', function(req, res) {
     pool.query('SELECT * FROM cats', (error, results) => {
         if (error) {
-            throw error;
-        }
-        res.status(200).json(results.rows);
+            res.status(404).json({'nope':'nothing'});
+        } else {
+            res.status(200).json(results.rows);
+        } 
     });
 });
 
