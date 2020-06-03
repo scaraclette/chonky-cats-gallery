@@ -7,11 +7,15 @@ const { pool } = require('../config');
 
 /* GET example API */
 router.get('/cat', function(req, res) {
-    pool.query('SELECT * FROM cats', (error, results) => {
+    console.log(pool);
+    console.log(process.env.NODE_ENV);
+    pool.query('SELECT * FROM cat', (error, results) => {
         if (error) {
             res.send(process.env.TEST_ENV);
             // res.status(404).json({'nope':'nothing'});
         } else {
+            console.log(process.env.NODE_ENV);
+            console.log('heyyy')
             res.status(200).json(results.rows);
         } 
     });
