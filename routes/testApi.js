@@ -11,7 +11,7 @@ router.get('/cat', function(req, res) {
     console.log(process.env.NODE_ENV);
     pool.query('SELECT * FROM cat', (error, results) => {
         if (error) {
-            res.send(process.env.TEST_ENV);
+            res.send(pool);
             // res.status(404).json({'nope':'nothing'});
         } else {
             console.log(process.env.NODE_ENV);
