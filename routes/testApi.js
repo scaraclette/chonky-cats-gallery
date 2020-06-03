@@ -14,10 +14,11 @@ router.get('/cat', function(req, res) {
             res.send(pool);
             // res.status(404).json({'nope':'nothing'});
         } else {
-            console.log(process.env.NODE_ENV);
-            console.log('heyyy')
+            // console.log(process.env.NODE_ENV);
+            // console.log('heyyy')
             res.status(200).json(results.rows);
         } 
+        pool.end();
     });
 });
 
