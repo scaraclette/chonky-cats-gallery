@@ -26,6 +26,11 @@
   display: flex;
 }
 
+.footer-custom {
+  padding-top: 75px;
+  /* background-color: azure; */
+}
+
 .App-link {
   color: #61dafb;
 }

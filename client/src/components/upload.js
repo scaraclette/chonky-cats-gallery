@@ -106,7 +106,7 @@ class Upload extends React.Component {
                             <section className="container">
                                 <div {...getRootProps({ className: 'dropzone' })}>
                                     <input {...getInputProps()} />
-                                    <p className="dashed">Click here to select files (maximum of 10MB)</p>
+                                    <p className="dashed">Click here to select picture (maximum of 10MB)</p>
                                 </div>
                             </section>
                         )}
