@@ -116,5 +116,6 @@ dist
 .pnp.*
 
 # Other files
-deployement.txt
+deployment.txt
 credentials.txt
+notes.txt
