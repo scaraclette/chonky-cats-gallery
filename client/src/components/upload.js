@@ -27,7 +27,6 @@ class Upload extends React.Component {
             nameValue: '',
             isChonky: false,
             isChonkyTitle: 'Select chonkiness',
-            clicked: '',
         }
         this.onDrop = this.onDrop.bind(this);
         this.onUpload = this.onUpload.bind(this);
@@ -79,7 +78,21 @@ class Upload extends React.Component {
     }
 
     sendToBackend() {
-        return null;
+        let catName = this.state.nameValue;
+        let catPic = this.state.uploadedFileCloudinaryUrl;
+        let isChonky = this.state.isChonky;
+        let sendToDatabase = request.post('/api/cat')
+                                .send({catName: catName, catPic: catPic, isChonky: isChonky});
+
+        sendToDatabase.end((err, response) => {
+            if (err) {
+                console.error(err);
+            }
+
+            console.log('success');
+        })
+
+        
     }
 
     render() {
