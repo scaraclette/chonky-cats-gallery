@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import Cats from './components/cats'
 
@@ -7,8 +6,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Cats />
+        <h1>Chonky Cats Gallery</h1>
       </header>
+      <Cats />
     </div>
   );
 }
