@@ -3,8 +3,11 @@ import Dropzone from 'react-dropzone';
 import request from 'superagent';
 import './upload.css';
 import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown'
-import Button from 'react-bootstrap/Button'
+import Dropdown from 'react-bootstrap/Dropdown';
+import Container from 'react-bootstrap/Container';
+import Form from 'react-bootstrap/Form'
+import Button from 'react-bootstrap/Button';
+
 
 // Available env variabls
 // REACT_APP_PRESET
@@ -22,75 +25,101 @@ class Upload extends React.Component {
             uploadedFileCloudinaryUrl: '',
             uploadedFile: 'false',
             nameValue: '',
-            clicked: ''
+            isChonky: false,
+            isChonkyTitle: 'Select chonkiness',
+            clicked: '',
         }
         this.onDrop = this.onDrop.bind(this);
         this.onUpload = this.onUpload.bind(this);
         this.inputName = this.inputName.bind(this);
-    }
-
-    onDrop(files) {
-        this.setState({
-            uploadedFile: 'true'
-        })
-    }
-
-    onUpload() {
-        this.setState({ clicked: 'yes' });
-        let name = this.state.nameValue
-        console.log('name: ' + name);
+        this.isChonk = this.isChonk.bind(this);
+        this.notChonk = this.notChonk.bind(this);
+        this.sendToBackend = this.sendToBackend.bind(this);
     }
 
     inputName(event) {
         this.setState({ nameValue: event.target.value })
     }
 
+    isChonk() {
+        this.setState({ isChonky: true, isChonkyTitle: 'Chonky' });
+    }
+
+    notChonk() {
+        this.setState({ isChonky: false, isChonkyTitle: 'Non-chonky' });
+    }
+
+    onDrop(files) {
+        this.onUpload(files[0]);
+    }
+
+    onUpload(file) {
+        this.setState({ isLoading: true });
+
+        let upload = request.post(CLOUDINARY_UPLOAD_API)
+            .field('upload_preset', CLOUDINARY_PRESET)
+            .field('file', file);
+
+        upload.end((err, response) => {
+            if (err) {
+                console.error(err);
+            }
+
+            if (response.body.secure_url !== '') {
+                this.setState({
+                    uploadedFileCloudinaryUrl: response.body.secure_url,
+                });
+                this.setState({
+                    isLoading: false
+                })
+                console.log('IMG URL:' + response.body.secure_url);
+                this.sendToBackend();
+            }
+        })
+    }
+
+    sendToBackend() {
+        return null;
+    }
+
     render() {
-        let submitButton;
-        // if (this.state.files.length != 0 && this.state.nameValue.length != 0) {
-
-        // }
-        if (this.state.nameValue.length !== 0 && this.state.uploadedFile === 'true') {
-            submitButton =
-                <div>
-                    <Button type="submit" variant="info" active>Enter</Button>
-                </div>
-        } else {
-            submitButton =
-                <div>
-                    <Button type="submit" variant="info" disabled>Enter</Button>
-                </div>
-        }
-
-        return (
-            <div>
-                <form onSubmit={this.onUpload}>
+        let dropZone;
+        if (this.state.nameValue.length !== 0) {
+            dropZone =
+                <form>
                     {/* DROPZONE IMAGE */}
                     <Dropzone onDrop={this.onDrop}>
                         {({ getRootProps, getInputProps }) => (
                             <section className="container">
                                 <div {...getRootProps({ className: 'dropzone' })}>
                                     <input {...getInputProps()} />
-                                    <p className="dashed">Click to select files (maximum of 10MB)</p>
+                                    <p className="dashed">Click here to select files (maximum of 10MB)</p>
                                 </div>
                             </section>
                         )}
                     </Dropzone>
-
-                    {/* CATNAME */}
-                    <label>
-                        Cat name:
-                        <input onChange={this.inputName} value={this.state.nameValue} type="text" name="catname" />
-                    </label>
-
-                    {/* CHONKINESS */}
-                    <DropdownButton id="dropdown-basic-button" title="select chonkiness">
-                        <Dropdown.Item onClick={this.homepage}>Add My Cat</Dropdown.Item>
-                        <Dropdown.Item onClick={this.allCats}>All</Dropdown.Item>
-                    </DropdownButton>
-
-                    {submitButton}
                 </form>
+        } else {
+            dropZone = <form>Enter cat name before uploading picture</form>
+        }
+
+
+        return (
+            <div>
+                {/* CATNAME */}
+                <Container>
+                    <Form.Group>
+                        <Form.Control type="text" placeholder="Enter cat name..." value={this.state.nameValue} onChange={this.inputName} />
+                    </Form.Group>
+                </Container>
+
+                {/* CHONKINESS */}
+                <DropdownButton className="chonkButton" variant="secondary" id="dropdown-basic-button" title={this.state.isChonkyTitle}>
+                    <Dropdown.Item onClick={this.isChonk}>Chonky</Dropdown.Item>
+                    <Dropdown.Item onClick={this.notChonk}>Non-chonky</Dropdown.Item>
+                </DropdownButton>
+
+                {dropZone}
 
                 {/* The following div shows the status of the upload and uploaded image with URL*/}
                 <div>
@@ -98,15 +127,12 @@ class Upload extends React.Component {
                         <div>
                             {this.state.uploadedFileCloudinaryUrl === '' ? null :
                                 <div>
-                                    <p>{this.state.uploadedFileCloudinaryUrl}</p>
+                                    <p>Cat Uploaded!</p>
                                     <img src={this.state.uploadedFileCloudinaryUrl} width='500px' />
                                 </div>}
                         </div>
                         : <h3>Uploading...</h3>}
                 </div>
-                {this.state.uploadedFile}
-                {this.state.nameValue}
-                {this.state.clicked}
             </div>
         )
     }

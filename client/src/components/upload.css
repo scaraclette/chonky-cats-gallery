@@ -1,3 +1,11 @@
 .dashed {
     border-style: dotted;
 }
+
+.catLabel {
+    width: 200px;
+}
+
+.chonkButton {
+    padding-bottom: 25px;
+}

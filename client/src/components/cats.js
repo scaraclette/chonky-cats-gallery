@@ -80,7 +80,10 @@ class Cats extends React.Component {
 
     addCat() {
         return (
-            <Upload />
+            <div>
+                <h1>Add your cat!</h1>
+                <Upload />
+            </div>
         )
     }
 
