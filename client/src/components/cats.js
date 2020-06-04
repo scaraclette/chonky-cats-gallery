@@ -7,8 +7,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import Figure from 'react-bootstrap/Figure'
 import Zoom from 'react-medium-image-zoom';
 import '../../node_modules/react-medium-image-zoom/dist/styles.css';
-
-
+import Upload from './upload';
 
 class Cats extends React.Component {
     constructor(props) {
@@ -80,9 +79,8 @@ class Cats extends React.Component {
     }
 
     addCat() {
-
         return (
-            <h1>+ My Cat</h1>
+            <Upload />
         )
     }
 
