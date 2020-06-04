@@ -4,18 +4,31 @@ import './cats.css';
 import Container from 'react-bootstrap/Container';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown'
+import Figure from 'react-bootstrap/Figure'
+import Zoom from 'react-medium-image-zoom';
+import '../../node_modules/react-medium-image-zoom/dist/styles.css';
+
+
 
 class Cats extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             someAPI: [],
-            catFilter: 'Choose Your Cats',
-            // title: 'all cats'
+            catFilter: 'Homepage',
         }
+        this.homepage = this.homepage.bind(this);
         this.allCats = this.allCats.bind(this);
         this.chonkyCats = this.chonkyCats.bind(this);
         this.nonchonkyCats = this.nonchonkyCats.bind(this);
+        this.addCat = this.addCat.bind(this);
+    }
+
+    homepage() {
+        this.setState({ 
+            catFilter: 'Homepage',
+            someAPI: [],
+         });
     }
 
     allCats() {
@@ -36,22 +49,46 @@ class Cats extends React.Component {
     chonkyCats() {
         this.setState({ 
             catFilter: 'Chonky',
-            someAPI: []
         });
-        
+        let getApi = request.get('/api/chonky');
+        getApi.end((err, res) => {
+            if (err) {
+                console.error(err);
+            }
+            let data = res.body;
+            this.setState({
+                someAPI: data
+            })
+        })
     }
 
     nonchonkyCats() {
         this.setState({ 
-            catFilter: 'Non-chonky',
-            someAPI: []
+            catFilter: 'Non-chonky',          
         });
+        let getApi = request.get('/api/not-chonky');
+        getApi.end((err, res) => {
+            if (err) {
+                console.error(err);
+            }
+            let data = res.body;
+            this.setState({
+                someAPI: data
+            })
+        })
         
+    }
+
+    addCat() {
+
+        return (
+            <h1>+ My Cat</h1>
+        )
     }
 
     render() {
         let message;
-        if (this.state.catFilter === 'Choose Your Cats') {
+        if (this.state.catFilter === 'Homepage') {
             message = <div><p>Welcome to Chonky Cats Gallery! Here we have a collection of our beloved feline friends.<br/>Choose from the dropdown above to see our chonky/non-chonky/all our friends</p></div>
         } else if (this.state.catFilter === 'All') {
             message = <p>All of our feline friends!</p>
@@ -61,12 +98,18 @@ class Cats extends React.Component {
             message = <p>All of our non-chonky friends!</p>
         }
 
+        let addMyCat;
+        if (this.state.catFilter === 'Homepage') {
+            addMyCat = this.addCat();
+        }
+
         return (
             
             <div>                
                 <div className="button-main">
                     <Container>
                         <DropdownButton id="dropdown-basic-button" title={this.state.catFilter}>
+                            <Dropdown.Item onClick={this.homepage}>Add My Cat</Dropdown.Item>
                             <Dropdown.Item onClick={this.allCats}>All</Dropdown.Item>
                             <Dropdown.Item onClick={this.chonkyCats}>Chonky</Dropdown.Item>
                             <Dropdown.Item onClick={this.nonchonkyCats}>Non-Chonky</Dropdown.Item>
@@ -75,10 +118,21 @@ class Cats extends React.Component {
                 </div>
 
                 {message}
+                {addMyCat}
 
                 <div>
                     {this.state.someAPI.map(item => (
-                        <img src={item.catpic} width='500px' />
+                        <Zoom>
+                            <Figure>
+                                <Figure.Image 
+                                    width={500}
+                                    src={item.catpic}
+                                />
+                                <Figure.Caption>
+                                    {item.catname}
+                                </Figure.Caption>
+                            </Figure>
+                        </Zoom>
                     ))}
                 </div>
             </div>

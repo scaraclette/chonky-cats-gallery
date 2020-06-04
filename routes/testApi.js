@@ -14,7 +14,25 @@ router.get('/cat', function(req, res) {
 });
 
 router.post('/cat', function(req, res) {
-    res.send('hey');
+    // post new cat
+});
+
+router.get('/chonky', function(req, res) {
+    pool.query('SELECT * FROM cats WHERE ischonky=true', (error, results) => {
+        if (error) {
+            throw error;
+        }
+        res.status(200).json(results.rows);
+    })
+});
+
+router.get('/not-chonky', function(req, res) {
+    pool.query('SELECT * FROM cats WHERE ischonky=false', (error, results) => {
+        if (error) {
+            throw error;
+        }
+        res.status(200).json(results.rows);
+    })
 });
 
 module.exports = router;
