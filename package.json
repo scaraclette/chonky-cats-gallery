@@ -6,6 +6,8 @@
     "node": "12.x"
   },
   "scripts": {
+    "test": "jest",
+    "test-open": "jest --detectOpenHandles",
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
     "client-install": "cd client && npm install",
@@ -32,6 +34,7 @@
     "react-bootstrap": "^1.0.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "supertest": "^4.0.2"
   }
 }
